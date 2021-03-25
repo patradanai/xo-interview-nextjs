@@ -11,14 +11,14 @@ import moment from "moment";
 const HomePage = () => {
   const [winnerName, setWinnerName] = useState(null);
   const [history, setHistory] = useState([]);
-  const [winnerLine, setWinnerLine] = useState(getwinnerLine(3));
-  const [sizeBoard, setSizeBoard] = useState(new Array(9).fill(null));
+  const [size, setSize] = useState(3);
+  const [winnerLine, setWinnerLine] = useState(getwinnerLine(size));
+  const [sizeBoard, setSizeBoard] = useState(new Array(size * size).fill(null));
   const [gameTurn, setGameTurn] = useState(true);
-
   // Update SizeBoard
   const onChangeSize = (event) => {
     event.preventDefault();
-    console.log(event.target.value);
+    setSize(parseInt(event.target.value));
   };
 
   // OnClick Player
@@ -49,21 +49,16 @@ const HomePage = () => {
 
       // Keep in LocalStrage
 
-      let newHistory = [
+      const newHistory = [
+        ...history,
         {
           linePlay: rawBoard,
           won: CheckWinner(winnerLine, rawBoard),
           date: moment(new Date()),
         },
       ];
-
-      //   newHistory.push({
-      //     linePlay: rawBoard,
-      //     won: CheckWinner(winnerLine, rawBoard),
-      //     date: moment(new Date()),
-      //   });
-
-      console.log(newHistory);
+      // set NewHistory
+      setHistory(newHistory);
 
       localStorage.setItem("history", JSON.stringify(newHistory));
     }
@@ -76,17 +71,28 @@ const HomePage = () => {
   // Reset Game
   const resetGame = () => {
     setWinnerName(null);
-    setSizeBoard(new Array(9).fill(null));
+    setSizeBoard(new Array(size * size).fill(null));
+  };
+
+  // ViewHistory
+  const viewHistory = (linePlay, won) => {
+    setSizeBoard(linePlay);
+    setWinnerName(won);
   };
 
   // Get History
-
   useEffect(() => {
     const rawHistory = localStorage.getItem("history");
     if (JSON.parse(rawHistory)) {
       setHistory(JSON.parse(rawHistory));
     }
   }, []);
+
+  //Update Size
+  useEffect(() => {
+    setWinnerLine(getwinnerLine(size));
+    setSizeBoard(new Array(size * size).fill(null));
+  }, [size]);
 
   return (
     <div className="container">
@@ -107,23 +113,28 @@ const HomePage = () => {
             </thead>
             <tbody className="text-center">
               {history?.map((val, index) => (
-                <HistoryList val={val} index={index} key={index} />
+                <HistoryList
+                  val={val}
+                  index={index}
+                  key={index}
+                  viewHistory={viewHistory}
+                />
               ))}
             </tbody>
           </table>
         </div>
         {/* Boards */}
-        <div className="w-80 h-80">
+        <div style={{ minWidth: 80, minHeight: 80 }}>
           <div className="my-1">
             <select
               className="w-20 p-2 appearance-none"
               onChange={(event) => onChangeSize(event)}
-              value={sizeBoard.length}
+              value={size}
             >
-              <option value={9}>3x3</option>
-              <option value={16}>4x4</option>
-              <option value={25}>5x5</option>
-              <option value={36}>6x6</option>
+              <option value={3}>3x3</option>
+              <option value={4}>4x4</option>
+              <option value={5}>5x5</option>
+              <option value={6}>6x6</option>
               <option value="custom">Custom</option>
             </select>
           </div>
@@ -148,7 +159,11 @@ const HomePage = () => {
               </button>
             </div>
             {/* Draw Boards */}
-            <div className="grid grid-cols-3 grid-flow-row h-full w-full">
+            <div
+              className={`grid ${
+                `grid-cols-` + size
+              } grid-flow-row h-full w-full`}
+            >
               {sizeBoard.map((val, index) => (
                 <Box
                   key={index}

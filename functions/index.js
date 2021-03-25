@@ -65,11 +65,11 @@ export const CheckWinner = (winLine, boards) => {
       if (boards[`${line[i][j] - 1}`]?.symbol == "X") {
         stackX += 1;
         // console.log("X", stackX);
-        if (stackX >= 3) return "X";
+        if (stackX >= line[i].length) return "X";
       } else if (boards[`${line[i][j] - 1}`]?.symbol == "O") {
         stackO += 1;
         // console.log("O", stackO);
-        if (stackO >= 3) return "O";
+        if (stackO >= line[i].length) return "O";
       }
     }
   }

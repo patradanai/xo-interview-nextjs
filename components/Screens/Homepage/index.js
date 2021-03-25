@@ -6,7 +6,7 @@ import FbIcon from "../../icons/facebook";
 import GithubIcon from "../../icons/gitub";
 import LinkedInIcon from "../../icons/linkedin";
 import { getwinnerLine, CheckWinner } from "../../../functions";
-
+import FormInput from "../../elements/FormInput";
 /**
  *
  * sizeBoard have array with object {name : player or dragon , symbol  : x, O}
@@ -40,6 +40,17 @@ const HomePage = () => {
   const onChangeSize = (event) => {
     event.preventDefault();
     const newSize = parseInt(event.target.value);
+    setSize(newSize);
+
+    setSizeBoard(new Array(newSize * newSize).fill(null));
+
+    setWinnerLine(getwinnerLine(newSize));
+
+    setGameTurn(false);
+  };
+
+  const onChangeSizeCustom = (size) => {
+    const newSize = parseInt(size);
     setSize(newSize);
 
     setSizeBoard(new Array(newSize * newSize).fill(null));
@@ -208,19 +219,24 @@ const HomePage = () => {
         </div>
         {/* Boards */}
         <div className="my-5" style={{ minWidth: 80, minHeight: 80 }}>
-          <div className="flex items-center my-1">
-            <p className="mx-3">Choose One Size: </p>
-            <select
-              className="w-20 p-2 appearance-none"
-              onChange={(event) => onChangeSize(event)}
-              value={size}
-            >
-              {options.map((val, index) => (
-                <option key={index} value={val.value}>
-                  {val.Lable}
-                </option>
-              ))}
-            </select>
+          <div className="flex flex-col">
+            <div className="flex items-center my-1">
+              <p className="mr-3">Choose One Size: </p>
+              <select
+                className="w-20 p-2 appearance-none"
+                onChange={(event) => onChangeSize(event)}
+                value={size}
+              >
+                {options.map((val, index) => (
+                  <option key={index} value={val.value}>
+                    {val.Lable}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <hr className="line my-3" />
+            {/* Form */}
+            <FormInput onChangeSize={onChangeSizeCustom} />
           </div>
           <div className="relative flex items-center justify-start w-full h-full overflow-auto">
             {/* BackDrop */}
@@ -307,6 +323,21 @@ const HomePage = () => {
         {`
           ul li {
             list-style-type: square;
+          }
+          hr.line {
+            border: none;
+            border-top: 1px solid #333;
+            color: #333;
+            overflow: visible;
+            text-align: center;
+            height: 5px;
+          }
+          hr.line::after {
+            background: #fff;
+            content: "Or";
+            padding: 0 4px;
+            position: relative;
+            top: -13px;
           }
         `}
       </style>

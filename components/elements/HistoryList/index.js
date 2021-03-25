@@ -11,7 +11,7 @@ const HistoryList = ({ val, index, viewHistory }) => {
       <td className="w-1/4">
         <button
           className="bg-blue-400 w-28 h-10 rounded"
-          onClick={() => viewHistory(val?.linePlay, val?.won)}
+          onClick={() => viewHistory(val?.linePlay, val?.won, val?.size)}
         >
           View
         </button>

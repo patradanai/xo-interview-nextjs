@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from "react";
-import Box from "../../elements/Box";
-import { getwinnerLine, CheckWinner } from "../../../functions";
-import HistoryList from "../../../components/elements/HistoryList";
 import moment from "moment";
+import Box from "../../elements/Box";
+import HistoryList from "../../../components/elements/HistoryList";
+import FbIcon from "../../icons/facebook";
+import GithubIcon from "../../icons/gitub";
+import LinkedInIcon from "../../icons/linkedin";
+import { getwinnerLine, CheckWinner } from "../../../functions";
+
 /**
  *
  * sizeBoard have array with object {name : player or dragon , symbol  : x, O}
@@ -10,6 +14,7 @@ import moment from "moment";
 
 const HomePage = () => {
   const [winnerName, setWinnerName] = useState(null);
+  const [countClick, setCounterClick] = useState(0);
   const [history, setHistory] = useState([]);
   const [size, setSize] = useState(3);
   const [winnerLine, setWinnerLine] = useState(getwinnerLine(size));
@@ -18,7 +23,10 @@ const HomePage = () => {
   // Update SizeBoard
   const onChangeSize = (event) => {
     event.preventDefault();
-    setSize(parseInt(event.target.value));
+    const newSize = parseInt(event.target.value);
+    setSize(newSize);
+
+    setSizeBoard(new Array(newSize * newSize).fill(null));
   };
 
   // OnClick Player
@@ -26,6 +34,9 @@ const HomePage = () => {
     let rawBoard = [...sizeBoard];
     let namePlayer;
     let symbol;
+
+    // Count Click
+    setCounterClick(() => countClick + 1);
 
     // Check Null
     if (rawBoard[number]) {
@@ -48,20 +59,24 @@ const HomePage = () => {
       setWinnerName(CheckWinner(winnerLine, rawBoard));
 
       // Keep in LocalStrage
-
       const newHistory = [
         ...history,
         {
           linePlay: rawBoard,
           won: CheckWinner(winnerLine, rawBoard),
           date: moment(new Date()),
+          size: size,
         },
       ];
       // set NewHistory
       setHistory(newHistory);
 
       localStorage.setItem("history", JSON.stringify(newHistory));
+
+      //Reset
+      setCounterClick(0);
     }
+
     // Update to sizeBoard
     setSizeBoard(rawBoard);
     // Change Turn
@@ -75,7 +90,8 @@ const HomePage = () => {
   };
 
   // ViewHistory
-  const viewHistory = (linePlay, won) => {
+  const viewHistory = (linePlay, won, size) => {
+    setSize(size);
     setSizeBoard(linePlay);
     setWinnerName(won);
   };
@@ -88,11 +104,31 @@ const HomePage = () => {
     }
   }, []);
 
-  //Update Size
+  // Check Click
   useEffect(() => {
-    setWinnerLine(getwinnerLine(size));
-    setSizeBoard(new Array(size * size).fill(null));
-  }, [size]);
+    // If No one win that mean draw
+    if (!winnerName && countClick >= size * size) {
+      setWinnerName("Draw");
+      // Keep in LocalStrage
+      const newHistory = [
+        ...history,
+        {
+          linePlay: sizeBoard,
+          won: "Draw",
+          date: moment(new Date()),
+          size: size,
+        },
+      ];
+      // set NewHistory
+      setHistory(newHistory);
+
+      localStorage.setItem("history", JSON.stringify(newHistory));
+
+      //Reset
+      setCounterClick(0);
+    }
+    console.log(countClick);
+  }, [countClick]);
 
   return (
     <div className="container">
@@ -150,7 +186,11 @@ const HomePage = () => {
                 winnerName ? "flex" : "hidden"
               } absolute w-full h-full flex flex-col items-center justify-center`}
             >
-              <p>The Winner is {winnerName}</p>
+              <p>
+                {winnerName == "Draw"
+                  ? "This Game is Draw"
+                  : "The Winner is" + winnerName}
+              </p>
               <button
                 className="bg-blue-400 p-2 rounded-md text-white mt-3 focus:outline-none hover:bg-black"
                 onClick={resetGame}
@@ -186,7 +226,18 @@ const HomePage = () => {
             Turn
           </div>
         </div>
-        {/* History */}
+
+        <div className="flex space-x-3 mt-5">
+          <a href="https://www.facebook.com/patradanai">
+            <FbIcon className="w-10 h-10" />
+          </a>
+          <a href="https://github.com/patradanai/xo-interview-nextjs">
+            <GithubIcon className="w-10 h-10" />
+          </a>
+          <a href="https://www.linkedin.com/in/patradanai-nakpimay/">
+            <LinkedInIcon className="w-10 h-10" />
+          </a>
+        </div>
       </div>
     </div>
   );

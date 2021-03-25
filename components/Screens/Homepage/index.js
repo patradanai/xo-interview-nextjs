@@ -145,12 +145,17 @@ const HomePage = () => {
       <div className="w-full h-full flex flex-col items-center">
         <h1 className="text-4xl my-3 font-mono">XO GAME</h1>
         <p>Role</p>
-        <ul>
-          <li>1. Play 2 Player</li>
+        <ul className="font-mono ">
+          <li>Play 2 Player</li>
+          <li>
+            Choose <span className="text-blue-400">Player</span>(X) or
+            <span className="text-red-500">Dragon</span>(0)
+          </li>
+          <li>Take turn</li>
         </ul>
         {/* Table for History */}
         <div className="w-full h-full">
-          <p className="text-2xl font-mono">History Player</p>
+          <p className="text-2xl font-mono mt-3">History Player</p>
           <table className="table-auto w-full overflow-x-auto overflow-y-auto">
             <thead className="bg-black text-white">
               <tr className="h-10">
@@ -267,6 +272,13 @@ const HomePage = () => {
           </a>
         </div>
       </div>
+      <style jsx>
+        {`
+          ul li {
+            list-style-type: square;
+          }
+        `}
+      </style>
     </div>
   );
 };

@@ -55,6 +55,23 @@ export const getwinnerLine = (size) => {
 
 export const CheckWinner = (winLine, boards) => {
   const line = winLine;
-  consople.log(line);
+  //   console.log(line, boards);
   // Loop Check Winner
+  for (let i = 0; i < line.length; i++) {
+    let stackX = 0;
+    let stackO = 0;
+
+    for (let j = 0; j < line[i].length; j++) {
+      console.log(boards[`${line[i][j] - 1}`]?.symbol);
+      if (boards[`${line[i][j] - 1}`]?.symbol == "X") {
+        stackX += 1;
+        console.log("X", stackX);
+        if (stackX >= 3) return "X";
+      } else if (boards[`${line[i][j] - 1}`]?.symbol == "O") {
+        stackO += 1;
+        console.log("O", stackO);
+        if (stackO >= 3) return "O";
+      }
+    }
+  }
 };

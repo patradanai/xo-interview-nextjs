@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Box from "../../elements/Box";
-import { getwinnerLine } from "../../../functions";
+import { getwinnerLine, CheckWinner } from "../../../functions";
 
 /**
  *
@@ -8,6 +8,7 @@ import { getwinnerLine } from "../../../functions";
  */
 
 const HomePage = () => {
+  const [winnerName, setWinnerName] = useState(null);
   const [winnerLine, setWinnerLine] = useState(getwinnerLine(3));
   const [sizeBoard, setSizeBoard] = useState(new Array(9).fill(null));
   const [gameTurn, setGameTurn] = useState(true);
@@ -29,8 +30,6 @@ const HomePage = () => {
       return null;
     }
 
-    // Check Winner
-
     // Check Turn name
     if (gameTurn) {
       namePlayer = "Player";
@@ -40,7 +39,10 @@ const HomePage = () => {
       symbol = "O";
     }
 
-    rawBoard[number] = { namePlayer, symbol };
+    rawBoard[number] = { namePlayer, symbol, number };
+
+    // Check Winner
+    setWinnerName(CheckWinner(winnerLine, rawBoard));
 
     // Update to sizeBoard
     setSizeBoard(rawBoard);
@@ -69,15 +71,29 @@ const HomePage = () => {
               <option value="custom">Custom</option>
             </select>
           </div>
-          <div className="grid grid-cols-3 grid-flow-row h-full w-full ">
-            {sizeBoard.map((val, index) => (
-              <Box
-                key={index}
-                val={val}
-                index={index}
-                onChangeBox={onChangeBox}
-              />
-            ))}
+          <div className="relative flex items-center justify-center w-full h-full">
+            <div
+              className={`${
+                winnerName ? "flex" : "hidden"
+              } absolute top-0 left-0 bg-white w-full h-full`}
+            >
+              <div className="w-full h-full flex flex-col items-center justify-center">
+                <p>The Winner is {winnerName}</p>
+                <button className="bg-blue-400 p-2 rounded-md text-white mt-3 focus:outline-none hover:bg-black">
+                  Try again?
+                </button>
+              </div>
+            </div>
+            <div className="grid grid-cols-3 grid-flow-row h-full w-full">
+              {sizeBoard.map((val, index) => (
+                <Box
+                  key={index}
+                  val={val}
+                  index={index}
+                  onChangeBox={onChangeBox}
+                />
+              ))}
+            </div>
           </div>
           {/* Status Turn */}
           <div className="text-lg text-center mt-5">

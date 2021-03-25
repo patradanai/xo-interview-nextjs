@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Box from "../../elements/Box";
 import { getwinnerLine, CheckWinner } from "../../../functions";
-
+import moment from 'moment'
 /**
  *
  * sizeBoard have array with object {name : player or dragon , symbol  : x, O}
@@ -13,13 +13,13 @@ const HomePage = () => {
   const [sizeBoard, setSizeBoard] = useState(new Array(9).fill(null));
   const [gameTurn, setGameTurn] = useState(true);
 
-  //   Update SizeBoard
+  // Update SizeBoard
   const onChangeSize = (event) => {
     event.preventDefault();
     console.log(event.target.value);
   };
 
-  //   OnClick Player
+  // OnClick Player
   const onChangeBox = (number) => {
     let rawBoard = [...sizeBoard];
     let namePlayer;
@@ -42,12 +42,28 @@ const HomePage = () => {
     rawBoard[number] = { namePlayer, symbol, number };
 
     // Check Winner
-    setWinnerName(CheckWinner(winnerLine, rawBoard));
+    if (CheckWinner(winnerLine, rawBoard)) {
+      setWinnerName(CheckWinner(winnerLine, rawBoard));
 
+      // Keep in LocalStrage
+      const rawHistory = localStorage.getItem("history");
+      let newHistory = [];
+
+      newHistory.push({linePlay:rawBoard,won:CheckWinner(winnerLine, rawBoard),date:})
+    
+
+    //   localStorage.setItem("history", JSON.stringify(rawBoard));
+    }
     // Update to sizeBoard
     setSizeBoard(rawBoard);
     // Change Turn
     setGameTurn(!gameTurn);
+  };
+
+  // Reset Game
+  const resetGame = () => {
+    setWinnerName(null);
+    setSizeBoard(new Array(9).fill(null));
   };
 
   return (
@@ -56,7 +72,7 @@ const HomePage = () => {
         <h1 className="text-3xl my-3">XO GAME</h1>
         <p>Role : </p>
 
-        {/* Draw Boards */}
+        {/* Boards */}
         <div className="w-80 h-80">
           <div className="my-1">
             <select
@@ -72,18 +88,26 @@ const HomePage = () => {
             </select>
           </div>
           <div className="relative flex items-center justify-center w-full h-full">
+            {/* BackDrop */}
             <div
               className={`${
                 winnerName ? "flex" : "hidden"
-              } absolute top-0 left-0 bg-white w-full h-full`}
+              } absolute top-0 left-0 bg-white opacity-50 w-full h-full`}
+            ></div>
+            <div
+              className={`${
+                winnerName ? "flex" : "hidden"
+              } absolute w-full h-full flex flex-col items-center justify-center`}
             >
-              <div className="w-full h-full flex flex-col items-center justify-center">
-                <p>The Winner is {winnerName}</p>
-                <button className="bg-blue-400 p-2 rounded-md text-white mt-3 focus:outline-none hover:bg-black">
-                  Try again?
-                </button>
-              </div>
+              <p>The Winner is {winnerName}</p>
+              <button
+                className="bg-blue-400 p-2 rounded-md text-white mt-3 focus:outline-none hover:bg-black"
+                onClick={resetGame}
+              >
+                Try again?
+              </button>
             </div>
+            {/* Draw Boards */}
             <div className="grid grid-cols-3 grid-flow-row h-full w-full">
               {sizeBoard.map((val, index) => (
                 <Box
@@ -103,7 +127,7 @@ const HomePage = () => {
               } font-bold`}
             >
               {gameTurn ? "Player" : "Dragon"}
-            </span>{" "}
+            </span>
             Turn
           </div>
         </div>

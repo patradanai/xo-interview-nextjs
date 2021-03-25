@@ -20,7 +20,7 @@ export const getwinnerLine = (size) => {
 
     // Get in Column
     let dataColumn = [];
-    var offerColumn = counterColumn;
+    let offerColumn = counterColumn;
     for (let j = 0; j < size; j++) {
       dataColumn.push(offerColumn);
 

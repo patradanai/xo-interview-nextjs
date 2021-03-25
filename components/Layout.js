@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 
 const Layout = ({ children }) => {
   return (
-    <div className="flex flex-row justify-between min-h-screen">{children}</div>
+    <div className="flex flex-col justify-between min-h-screen">{children}</div>
   );
 };
 

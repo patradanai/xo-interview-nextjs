@@ -62,14 +62,13 @@ export const CheckWinner = (winLine, boards) => {
     let stackO = 0;
 
     for (let j = 0; j < line[i].length; j++) {
-      console.log(boards[`${line[i][j] - 1}`]?.symbol);
       if (boards[`${line[i][j] - 1}`]?.symbol == "X") {
         stackX += 1;
-        console.log("X", stackX);
+        // console.log("X", stackX);
         if (stackX >= 3) return "X";
       } else if (boards[`${line[i][j] - 1}`]?.symbol == "O") {
         stackO += 1;
-        console.log("O", stackO);
+        // console.log("O", stackO);
         if (stackO >= 3) return "O";
       }
     }

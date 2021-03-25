@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Box from "../../elements/Box";
 import { getwinnerLine, CheckWinner } from "../../../functions";
-import moment from 'moment'
+import HistoryList from "../../../components/elements/HistoryList";
+import moment from "moment";
 /**
  *
  * sizeBoard have array with object {name : player or dragon , symbol  : x, O}
@@ -9,6 +10,7 @@ import moment from 'moment'
 
 const HomePage = () => {
   const [winnerName, setWinnerName] = useState(null);
+  const [history, setHistory] = useState([]);
   const [winnerLine, setWinnerLine] = useState(getwinnerLine(3));
   const [sizeBoard, setSizeBoard] = useState(new Array(9).fill(null));
   const [gameTurn, setGameTurn] = useState(true);
@@ -46,13 +48,24 @@ const HomePage = () => {
       setWinnerName(CheckWinner(winnerLine, rawBoard));
 
       // Keep in LocalStrage
-      const rawHistory = localStorage.getItem("history");
-      let newHistory = [];
 
-      newHistory.push({linePlay:rawBoard,won:CheckWinner(winnerLine, rawBoard),date:})
-    
+      let newHistory = [
+        {
+          linePlay: rawBoard,
+          won: CheckWinner(winnerLine, rawBoard),
+          date: moment(new Date()),
+        },
+      ];
 
-    //   localStorage.setItem("history", JSON.stringify(rawBoard));
+      //   newHistory.push({
+      //     linePlay: rawBoard,
+      //     won: CheckWinner(winnerLine, rawBoard),
+      //     date: moment(new Date()),
+      //   });
+
+      console.log(newHistory);
+
+      localStorage.setItem("history", JSON.stringify(newHistory));
     }
     // Update to sizeBoard
     setSizeBoard(rawBoard);
@@ -66,12 +79,39 @@ const HomePage = () => {
     setSizeBoard(new Array(9).fill(null));
   };
 
+  // Get History
+
+  useEffect(() => {
+    const rawHistory = localStorage.getItem("history");
+    if (JSON.parse(rawHistory)) {
+      setHistory(JSON.parse(rawHistory));
+    }
+  }, []);
+
   return (
     <div className="container">
       <div className="w-full h-full flex flex-col items-center">
         <h1 className="text-3xl my-3">XO GAME</h1>
         <p>Role : </p>
-
+        {/* Table for History */}
+        <div className="w-full h-full">
+          <p className="">History Player</p>
+          <table className="table-auto w-full overflow-x-auto overflow-y-auto">
+            <thead className="bg-black text-white">
+              <tr className="h-10">
+                <th>No.</th>
+                <th>Date</th>
+                <th>Won</th>
+                <th>View</th>
+              </tr>
+            </thead>
+            <tbody className="text-center">
+              {history?.map((val, index) => (
+                <HistoryList val={val} index={index} key={index} />
+              ))}
+            </tbody>
+          </table>
+        </div>
         {/* Boards */}
         <div className="w-80 h-80">
           <div className="my-1">
@@ -126,11 +166,12 @@ const HomePage = () => {
                 !gameTurn ? "text-red-500" : "text-blue-500"
               } font-bold`}
             >
-              {gameTurn ? "Player" : "Dragon"}
+              {gameTurn ? "Player " : "Dragon "}
             </span>
             Turn
           </div>
         </div>
+        {/* History */}
       </div>
     </div>
   );

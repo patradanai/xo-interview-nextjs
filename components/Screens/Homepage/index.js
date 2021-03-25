@@ -12,6 +12,17 @@ import { getwinnerLine, CheckWinner } from "../../../functions";
  * sizeBoard have array with object {name : player or dragon , symbol  : x, O}
  */
 
+const options = [
+  { Lable: "Normal", value: 3 },
+  { Lable: "4x4", value: 4 },
+  { Lable: "5x5", value: 5 },
+  { Lable: "6x6", value: 6 },
+  { Lable: "7x7", value: 7 },
+  { Lable: "8x8", value: 8 },
+  { Lable: "9x9", value: 9 },
+  { Lable: "10x10", value: 10 },
+];
+
 const HomePage = () => {
   const [winnerName, setWinnerName] = useState(null);
   const [countClick, setCounterClick] = useState(0);
@@ -127,17 +138,19 @@ const HomePage = () => {
       //Reset
       setCounterClick(0);
     }
-    console.log(countClick);
   }, [countClick]);
 
   return (
     <div className="container">
       <div className="w-full h-full flex flex-col items-center">
-        <h1 className="text-3xl my-3">XO GAME</h1>
-        <p>Role : </p>
+        <h1 className="text-4xl my-3 font-mono">XO GAME</h1>
+        <p>Role</p>
+        <ul>
+          <li>1. Play 2 Player</li>
+        </ul>
         {/* Table for History */}
         <div className="w-full h-full">
-          <p className="">History Player</p>
+          <p className="text-2xl font-mono">History Player</p>
           <table className="table-auto w-full overflow-x-auto overflow-y-auto">
             <thead className="bg-black text-white">
               <tr className="h-10">
@@ -160,21 +173,22 @@ const HomePage = () => {
           </table>
         </div>
         {/* Boards */}
-        <div style={{ minWidth: 80, minHeight: 80 }}>
-          <div className="my-1">
+        <div className="my-5" style={{ minWidth: 80, minHeight: 80 }}>
+          <div className="flex items-center my-1">
+            <p className="mx-3">Choose One Size: </p>
             <select
               className="w-20 p-2 appearance-none"
               onChange={(event) => onChangeSize(event)}
               value={size}
             >
-              <option value={3}>3x3</option>
-              <option value={4}>4x4</option>
-              <option value={5}>5x5</option>
-              <option value={6}>6x6</option>
-              <option value="custom">Custom</option>
+              {options.map((val, index) => (
+                <option key={index} value={val.value}>
+                  {val.Lable}
+                </option>
+              ))}
             </select>
           </div>
-          <div className="relative flex items-center justify-center w-full h-full">
+          <div className="relative flex items-center justify-start w-full h-full overflow-auto">
             {/* BackDrop */}
             <div
               className={`${
@@ -202,7 +216,7 @@ const HomePage = () => {
             <div
               className={`grid ${
                 `grid-cols-` + size
-              } grid-flow-row h-full w-full`}
+              } grid-flow-row h-full flex-shrink-0`}
             >
               {sizeBoard.map((val, index) => (
                 <Box
@@ -216,14 +230,28 @@ const HomePage = () => {
           </div>
           {/* Status Turn */}
           <div className="text-lg text-center mt-5">
-            <span
-              className={`${
-                !gameTurn ? "text-red-500" : "text-blue-500"
-              } font-bold`}
+            {winnerName ? (
+              <p>This is GameOver</p>
+            ) : (
+              <p>
+                <span
+                  className={`${
+                    !gameTurn ? "text-red-500" : "text-blue-500"
+                  } font-bold`}
+                >
+                  {gameTurn ? "Player " : "Dragon "}
+                </span>
+                Turn
+              </p>
+            )}
+          </div>
+          <div className="text-center">
+            <button
+              className="bg-blue-400 p-2 rounded-md text-white mt-3 focus:outline-none hover:bg-black"
+              onClick={resetGame}
             >
-              {gameTurn ? "Player " : "Dragon "}
-            </span>
-            Turn
+              Reset Game
+            </button>
           </div>
         </div>
 

@@ -1,16 +1,47 @@
 import React, { useState } from "react";
 import Box from "../../elements/Box";
+
+/**
+ *
+ * sizeBoard have array with object {name : player or dragon , symbol  : x, O}
+ */
+
 const HomePage = () => {
   const [sizeBoard, setSizeBoard] = useState(new Array(9).fill(null));
   const [gameTurn, setGameTurn] = useState(true);
 
   //   Update SizeBoard
   const onChangeSize = (event) => {
+    event.preventDefault();
     console.log(event.target.value);
   };
 
   //   OnClick Player
-  const onChangeBox = () => {
+  const onChangeBox = (number) => {
+    let rawBoard = [...sizeBoard];
+    let namePlayer;
+    let symbol;
+
+    // Check Null
+    if (rawBoard[number]) {
+      return null;
+    }
+
+    // Check Winner
+
+    // Check Turn name
+    if (gameTurn) {
+      namePlayer = "Player";
+      symbol = "X";
+    } else {
+      namePlayer = "Dragon";
+      symbol = "O";
+    }
+
+    rawBoard[number] = { namePlayer, symbol };
+
+    // Update to sizeBoard
+    setSizeBoard(rawBoard);
     // Change Turn
     setGameTurn(!gameTurn);
   };
@@ -36,12 +67,27 @@ const HomePage = () => {
               <option value="custom">Custom</option>
             </select>
           </div>
-          <div className="grid grid-cols-3 grid-flow-row h-full w-full">
+          <div className="grid grid-cols-3 grid-flow-row h-full w-full ">
             {sizeBoard.map((val, index) => (
-              <Box val={index + 1} onChangeBox={onChangeBox} />
+              <Box
+                key={index}
+                val={val}
+                index={index}
+                onChangeBox={onChangeBox}
+              />
             ))}
           </div>
-          <div className="">{gameTurn ? "Player" : "Dragon"} Turn</div>
+          {/* Status Turn */}
+          <div className="text-lg text-center mt-5">
+            <span
+              className={`${
+                !gameTurn ? "text-red-500" : "text-blue-500"
+              } font-bold`}
+            >
+              {gameTurn ? "Player" : "Dragon"}
+            </span>{" "}
+            Turn
+          </div>
         </div>
       </div>
     </div>

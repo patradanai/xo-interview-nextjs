@@ -4,7 +4,8 @@ import PropTypes from "prop-types";
 const Box = ({ val, onChangeBox, index }) => {
   return (
     <div
-      className="flex items-center justify-center bg-yellow-200 border-2 w-full h-full hover:bg-red-300"
+      className="box-border flex items-center justify-center bg-yellow-200 border-2 hover:bg-red-300"
+      style={{ width: 100, height: 100 }}
       onClick={() => onChangeBox(index)}
     >
       <span className="text-7xl font-bold">{val?.symbol}</span>

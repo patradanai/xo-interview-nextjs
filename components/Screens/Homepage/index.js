@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Box from "../../elements/Box";
+import { getwinnerLine } from "../../../functions";
 
 /**
  *
@@ -7,6 +8,7 @@ import Box from "../../elements/Box";
  */
 
 const HomePage = () => {
+  const [winnerLine, setWinnerLine] = useState(getwinnerLine(3));
   const [sizeBoard, setSizeBoard] = useState(new Array(9).fill(null));
   const [gameTurn, setGameTurn] = useState(true);
 

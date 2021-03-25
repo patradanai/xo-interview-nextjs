@@ -31,7 +31,12 @@ const HomePage = () => {
   const [winnerLine, setWinnerLine] = useState(getwinnerLine(size));
   const [sizeBoard, setSizeBoard] = useState(new Array(size * size).fill(null));
   const [gameTurn, setGameTurn] = useState(true);
-  // Update SizeBoard
+
+  /**
+   * Update SizeBoard
+   *
+   * @param {*} event
+   */
   const onChangeSize = (event) => {
     event.preventDefault();
     const newSize = parseInt(event.target.value);
@@ -42,7 +47,12 @@ const HomePage = () => {
     setWinnerLine(getwinnerLine(newSize));
   };
 
-  // OnClick Player
+  /**
+   * onChangeBox
+   *
+   * @param {number} number
+   * @returns
+   */
   const onChangeBox = (number) => {
     let rawBoard = [...sizeBoard];
     let namePlayer;
@@ -96,13 +106,20 @@ const HomePage = () => {
     setGameTurn(!gameTurn);
   };
 
-  // Reset Game
+  /**
+   * Reset Game
+   */
   const resetGame = () => {
     setWinnerName(null);
     setSizeBoard(new Array(size * size).fill(null));
   };
 
-  // ViewHistory
+  /**
+   * ViewHistory
+   * @param {object} linePlay
+   * @param {string} won
+   * @param {number} size
+   */
   const viewHistory = (linePlay, won, size) => {
     setSize(size);
     setSizeBoard(linePlay);
@@ -151,7 +168,7 @@ const HomePage = () => {
           <li>Play 2 Player</li>
           <li>
             Choose <span className="text-blue-400">Player</span>(X) or
-            <span className="text-red-500">Dragon</span>(0)
+            <span className="text-red-500 mr-2">Dragon</span>(0)
           </li>
           <li>Take turn</li>
         </ul>

@@ -45,6 +45,8 @@ const HomePage = () => {
     setSizeBoard(new Array(newSize * newSize).fill(null));
 
     setWinnerLine(getwinnerLine(newSize));
+
+    setGameTurn(false);
   };
 
   /**
@@ -110,7 +112,9 @@ const HomePage = () => {
    * Reset Game
    */
   const resetGame = () => {
+    //Reset All State
     setWinnerName(null);
+    setGameTurn(false);
     setSizeBoard(new Array(size * size).fill(null));
   };
 
@@ -123,6 +127,7 @@ const HomePage = () => {
   const viewHistory = (linePlay, won, size) => {
     setSize(size);
     setSizeBoard(linePlay);
+    setGameTurn(false);
     setWinnerName(won);
   };
 
@@ -168,14 +173,19 @@ const HomePage = () => {
           <li>Play 2 Player</li>
           <li>
             Choose <span className="text-blue-400">Player</span>(X) or
-            <span className="text-red-500 mr-2">Dragon</span>(0)
+            <span className="text-red-500 ml-2">Dragon</span>(O)
           </li>
           <li>Take turn</li>
         </ul>
         {/* Table for History */}
-        <div className="w-full h-full">
-          <p className="text-2xl font-mono mt-3">History Player</p>
-          <table className="table-auto w-full overflow-x-auto overflow-y-auto">
+        <div className="text-left w-full">
+          <p className="text-2xl font-mono my-3">History Player</p>
+        </div>
+        <div
+          className="w-full overflow-x-auto overflow-y-auto"
+          style={{ maxHeight: 280 }}
+        >
+          <table className="table-auto w-full">
             <thead className="bg-black text-white">
               <tr className="h-10">
                 <th>No.</th>
@@ -224,10 +234,12 @@ const HomePage = () => {
                 winnerName ? "flex" : "hidden"
               } absolute w-full h-full flex flex-col items-center justify-center`}
             >
-              <p>
+              <p className="text-base font-bold">
                 {winnerName == "Draw"
                   ? "This Game is Draw"
-                  : "The Winner is" + winnerName}
+                  : winnerName == "X"
+                  ? "The Winner is " + "Player (X)"
+                  : "The Winner is " + "Dragon (O)"}
               </p>
               <button
                 className="bg-blue-400 p-2 rounded-md text-white mt-3 focus:outline-none hover:bg-black"

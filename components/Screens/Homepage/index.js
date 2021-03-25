@@ -38,6 +38,8 @@ const HomePage = () => {
     setSize(newSize);
 
     setSizeBoard(new Array(newSize * newSize).fill(null));
+
+    setWinnerLine(getwinnerLine(newSize));
   };
 
   // OnClick Player

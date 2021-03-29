@@ -46,7 +46,7 @@ const HomePage = () => {
 
     setWinnerLine(getwinnerLine(newSize));
 
-    setGameTurn(false);
+    setGameTurn(true);
   };
 
   const onChangeSizeCustom = (size) => {
@@ -57,7 +57,7 @@ const HomePage = () => {
 
     setWinnerLine(getwinnerLine(newSize));
 
-    setGameTurn(false);
+    setGameTurn(true);
   };
 
   /**
@@ -125,7 +125,7 @@ const HomePage = () => {
   const resetGame = () => {
     //Reset All State
     setWinnerName(null);
-    setGameTurn(false);
+    setGameTurn(true);
     setSizeBoard(new Array(size * size).fill(null));
   };
 
@@ -138,7 +138,7 @@ const HomePage = () => {
   const viewHistory = (linePlay, won, size) => {
     setSize(size);
     setSizeBoard(linePlay);
-    setGameTurn(false);
+    setGameTurn(true);
     setWinnerName(won);
   };
 
@@ -265,11 +265,7 @@ const HomePage = () => {
               </button>
             </div>
             {/* Draw Boards */}
-            <div
-              className={`grid ${
-                `grid-cols-` + size
-              } grid-flow-row h-full flex-shrink-0`}
-            >
+            <div className={`board h-full flex-shrink-0`}>
               {sizeBoard.map((val, index) => (
                 <Box
                   key={index}
@@ -321,6 +317,12 @@ const HomePage = () => {
       </div>
       <style jsx>
         {`
+          .board {
+            display: grid;
+            grid-template-columns: repeat(${size}, minmax(0, 1fr));
+            gap: 10px;
+            grid-auto-rows: minmax(100px, auto);
+          }
           ul li {
             list-style-type: square;
           }
